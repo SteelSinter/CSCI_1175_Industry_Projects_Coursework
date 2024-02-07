@@ -102,11 +102,17 @@ public class UnweightedGraph<V> implements Graph<V> {
 				stack.pop();
 			}
 			else {
-				for (int i = neighbors.get(x).size(); i > 0; i--) {
+				for (int i = neighbors.get(x).size() - 1; i > 0; i--) {
 					Edge e = neighbors.get(x).get(i);
-					neighbors.get(x).remove(neighbors.get(x).size() - 1);
+					neighbors.get(x).remove(neighbors.get(x).indexOf(e.v));
 					
-					if ()
+					if (!isVisited[e.v]) {
+						x = e.v;
+						stack.push(e.v);
+						isVisited[e.v] = true; 
+						searchOrder.add(e.v);
+						break;
+					}
 				}
 			}
 		}
