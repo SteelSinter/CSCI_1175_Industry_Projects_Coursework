@@ -44,39 +44,25 @@ public class UnweightedGraph<V> implements Graph<V> {
 	
 	// Returns the best path between two nodes
 	public List<Integer> getPath(int u, int v) {
-		List<Integer> path = new ArrayList<Integer>();
-		List<Integer> queue = new LinkedList<Integer>();
-		boolean[] visited = new boolean[vertices.size()];
+		SearchTree search = bfs(u);
+		LinkedList<Integer> list = new LinkedList<Integer>();
 		
-		path.add(v);
-		visited[v] = true;
+		int x = search.getParent(v);
+		list.add(v);
+		list.addFirst(x);
 		
-		for (Edge e: neighbors.get(v)) { // add each child to the queue
-			if (!visited[e.u])
-				queue.add(e.u);
+		while (x != u) {
+			x = search.getParent(x);
+			list.addFirst(x);
 		}
 		
-		while (!queue.isEmpty()) {
-			int current = queue.get(queue.size() - 1);
-			visited[current] = true;
-			if (current == u) {
-				path.add(current);
-				return path;
-			}
-			if (neighbors.get(current).size() == 0) { // if no children, remove from queue
-				queue.remove(current);
-				continue;
-			}
-			
-			path.add(current);
-			
-			for (Edge e: neighbors.get(v)) { // add each child to the queue
-				if (!visited[e.u])
-					queue.add(e.u);
-				continue;
-			}
+		if (x == u) {
+			return list;
 		}
-		return path;
+		else {
+			return null;
+		}
+		
 	}
 
 	/** Create adjacency lists for each vertex */
