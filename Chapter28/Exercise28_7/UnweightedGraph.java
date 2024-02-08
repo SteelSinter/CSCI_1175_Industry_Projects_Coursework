@@ -276,22 +276,70 @@ public class UnweightedGraph<V> implements Graph<V> {
       System.out.println();
     }
     
-    public List<Integer> getACycle() {
-    	return getACycle(vertices.get(root), new boolean[vertices.size()], new Stack<V>());
-    }
-    
-    public List<Integer> getACycle(V current, boolean[] visited, Stack<V> stack) {
-    	visited[(int) current] = true;
-    	
-    	if (neighbors.get((int) current).size() == 0) {
-    		stack.pop();
-    		return null;
-    	}
-    	
-    	if (stack.contains(current)) {
-    		return (List<Integer>) stack;
-    	}
-    }
+  }
+  
+  /*public <V> List<Integer> getACycle() {
+  	return getACycle(vertices.get(0), new boolean[vertices.size()], new Stack<Integer>());
+  }
+  
+  public <V> List<Integer> getACycle(V current, boolean[] visited, Stack<Integer> stack) {
+  	visited[vertices.indexOf(current)] = true;
+  	System.out.println(stack);
+  	
+  	if (stack.contains(current)) {
+  		ArrayList<Integer> list = new ArrayList<Integer>();
+  		int i = stack.pop();
+  		list.add(i);
+  		while(i != vertices.indexOf(current)) {
+  			i = stack.pop();
+  			list.add(i);
+  		}
+  		return list;
+  	}
+  	
+  	stack.push(vertices.indexOf(current));
+  	
+  	if (neighbors.get(vertices.indexOf(current)).size() == 0) {
+  		stack.pop();
+  		return null;
+  	}
+  	
+  	for (Edge e: neighbors.get(vertices.indexOf(current))) {
+  		return getACycle(vertices.get(e.v), visited, stack);
+  	}
+  	
+  	return null;
+  }*/
+  
+  public List<Integer> getACycle() {
+	  List<Integer> ver = new ArrayList<Integer>(vertices.size());
+	  int v;
+	  for (V vertex: vertices) {
+		  ver.add(vertices.indexOf(vertex));
+	  }
+	  boolean[] visited = new boolean[ver.size()];
+	  int[] parents = new int[ver.size()];
+	  for (int i: parents) { // Initialize parents to -1
+		  parents[i] = -1;
+	  }
+	  while (ver.size() > 0); {
+		  v = ver.get(ver.indexOf(ver.size() - 1));
+		  Stack<Integer> stack = new Stack<Integer>();
+		  stack.push(v);
+		  visited[v] = true;
+		  ver.remove(v);
+		  
+		  while (!stack.isEmpty()) {
+			  int x = stack.peek();
+			  if (neighbors.get(x).size() == 0) {
+				  stack.pop();
+			  }
+			  else {
+				  
+			  }
+		  }
+	  }
+	  
   }
 }
 
