@@ -1,5 +1,7 @@
 // Exercise31_01Server.java: The server can communicate with
 // multiple clients concurrently using the multiple threads
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.util.*;
 import javafx.application.Application;
@@ -32,9 +34,15 @@ public class Exercise33_01Server extends Application {
         	ServerSocket serverSocket = new ServerSocket(port);
         	java.net.Socket socket = serverSocket.accept();
         	ta.setText(ta.getText() + "Connected to client on port " + port + ".\r\n");
+        	DataInputStream in = new DataInputStream(socket.getInputStream());
+        	DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        	while (true) {
+        		ta.appendText(in.read() + "\r\n");
+        	}
+        	
         }
         catch (java.io.IOException e) {
-        	e.printStackTrace();
+        	ta.appendText(e.toString() + "\r\n");
         }
     }).start();
   }

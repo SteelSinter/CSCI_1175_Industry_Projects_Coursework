@@ -1,5 +1,7 @@
 // Exercise31_01Client.java: The client sends the input to the server and receives
 // result back from the server
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
 
 import javafx.application.Application;
@@ -22,6 +24,9 @@ public class Exercise33_01Client extends Application {
   private Button btSubmit= new Button("Submit");
   private int port = 8000;
   private String serverName = "localhost";
+  
+  DataInputStream in;
+  DataOutputStream out;
 
   // Text area to display contents
   private TextArea ta = new TextArea();
@@ -52,15 +57,29 @@ public class Exercise33_01Client extends Application {
     pane.setCenter(new ScrollPane(ta));
     pane.setTop(gridPane);
     
-    btSubmit.setOnAction(e -> {
-    	
-    });
-    
     // Create a scene and place it in the stage
     Scene scene = new Scene(pane, 400, 250);
     primaryStage.setTitle("Exercise31_01Client"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
     primaryStage.show(); // Display the stage
+    
+    btSubmit.setOnAction(e -> {
+		try {
+			out.writeDouble(Double.parseDouble(tfAnnualInterestRate.getText()));
+			ta.appendText("Sending " + tfAnnualInterestRate.getText() + "...");
+			out.writeDouble(Double.parseDouble(tfNumOfYears.getText()));
+			ta.appendText("Sending " + tfNumOfYears.getText() + "...");
+			out.writeDouble(Double.parseDouble(tfLoanAmount.getText()));
+			ta.appendText("Sending " + tfLoanAmount.getText() + "...");
+			out.flush();
+			
+			ta.appendText(String.valueOf(in.readDouble()));
+			ta.appendText(String.valueOf(in.readDouble()));
+		}
+    	catch (java.io.IOException ex) {
+    		ex.printStackTrace();
+    	}
+    });
     
     // Connect to server
  	new Thread(() -> {
@@ -68,10 +87,13 @@ public class Exercise33_01Client extends Application {
  			ta.setText(ta.getText() + "Connecting to server " + serverName + "...\r\n");
  			Socket socket = new Socket(serverName, port);
  			ta.setText(ta.getText() + "Connected to " + serverName + " on port " + port + ".\r\n");
+ 			in = new DataInputStream(socket.getInputStream());
+ 			out = new DataOutputStream(socket.getOutputStream());
  		}
  		catch (java.io.IOException e) {
- 			e.printStackTrace();
+ 			ta.appendText(e.toString() + "\r\n");
  		}
+ 		
  	}).start();
   }
   
