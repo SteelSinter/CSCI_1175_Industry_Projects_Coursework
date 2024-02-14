@@ -26,8 +26,9 @@ public class Exercise33_09Server extends Application {
   public void start(Stage primaryStage) {
     taServer.setWrapText(true);
     taClient.setWrapText(true);
+    taClient.setMaxHeight(50);
     taServer.setDisable(true);
-    taServer.setStyle("-fx-text-fill: black;");
+    taServer.setStyle("-fx-text-fill: black; -fx-opacity: 1");
 
     BorderPane pane1 = new BorderPane();
     pane1.setTop(new Label("History"));
@@ -38,22 +39,9 @@ public class Exercise33_09Server extends Application {
     
     VBox vBox = new VBox(5);
     vBox.getChildren().addAll(pane1, pane2);
-    
-    taClient.setOnKeyPressed(e -> {
-    	try {
-    		if (e.getCode() == KeyCode.ENTER) {
-        		out.writeUTF(taClient.getText());
-        		taClient.clear();
-        	}
-    	}
-    	catch (java.io.IOException ex) {
-    		taServer.appendText(ex.toString());
-    	}
-    	
-    });
 
     // Create a scene and place it in the stage
-    Scene scene = new Scene(vBox, 200, 200);
+    Scene scene = new Scene(vBox, 200, 400);
     primaryStage.setTitle("Exercise31_09Server"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
     primaryStage.show(); // Display the stage
@@ -69,7 +57,7 @@ public class Exercise33_09Server extends Application {
     		out = new DataOutputStream(socket.getOutputStream());
     		
     		while (true) {
-    			taServer.appendText(in.readUTF());
+    			taServer.appendText("Them: " + in.readUTF());
     		}
     		
     	}
@@ -77,6 +65,22 @@ public class Exercise33_09Server extends Application {
     		taServer.appendText(e.toString());
     	}
     }).start();
+    
+    taClient.setOnKeyPressed(e -> {
+    	try {
+    		if (e.getCode() == KeyCode.ENTER) {
+    			String text = taClient.getText().trim() + "\r\n";
+        		out.writeUTF(text);
+        		taServer.appendText("You: " + text);
+        		out.flush();
+        		taClient.clear();
+        	}
+    	}
+    	catch (java.io.IOException ex) {
+    		taServer.appendText(ex.toString());
+    	}
+    	
+    });
     
   }
 
