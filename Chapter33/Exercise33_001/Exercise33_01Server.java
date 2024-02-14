@@ -37,7 +37,14 @@ public class Exercise33_01Server extends Application {
         	DataInputStream in = new DataInputStream(socket.getInputStream());
         	DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         	while (true) {
-        		ta.appendText(in.read() + "\r\n");
+        		Loan loan = new Loan(in.readDouble(), (int) in.readDouble(), in.readDouble());
+        		ta.appendText("Recieving data\r\n");
+        		
+        		out.writeDouble(loan.getMonthlyPayment());
+        		ta.appendText("Sending " + loan.getMonthlyPayment() + "...\r\n");
+        		out.writeDouble(loan.getTotalPayment());
+        		ta.appendText("Sending " + loan.getTotalPayment() + "...\r\n");
+        		out.flush();
         	}
         	
         }

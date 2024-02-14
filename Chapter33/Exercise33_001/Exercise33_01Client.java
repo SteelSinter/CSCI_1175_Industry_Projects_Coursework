@@ -66,15 +66,15 @@ public class Exercise33_01Client extends Application {
     btSubmit.setOnAction(e -> {
 		try {
 			out.writeDouble(Double.parseDouble(tfAnnualInterestRate.getText()));
-			ta.appendText("Sending " + tfAnnualInterestRate.getText() + "...");
+			ta.appendText("Sending " + tfAnnualInterestRate.getText() + "...\r\n");
 			out.writeDouble(Double.parseDouble(tfNumOfYears.getText()));
-			ta.appendText("Sending " + tfNumOfYears.getText() + "...");
+			ta.appendText("Sending " + tfNumOfYears.getText() + "...\r\n");
 			out.writeDouble(Double.parseDouble(tfLoanAmount.getText()));
-			ta.appendText("Sending " + tfLoanAmount.getText() + "...");
+			ta.appendText("Sending " + tfLoanAmount.getText() + "...\r\n");
 			out.flush();
 			
-			ta.appendText(String.valueOf(in.readDouble()));
-			ta.appendText(String.valueOf(in.readDouble()));
+			ta.appendText(String.valueOf("Monthly payment: " + in.readDouble() + "\r\n"));
+			ta.appendText(String.valueOf("Total patment: " + in.readDouble() + "\r\n"));
 		}
     	catch (java.io.IOException ex) {
     		ex.printStackTrace();
